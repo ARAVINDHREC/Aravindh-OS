@@ -1,0 +1,73 @@
+#include <stdio.h>
+
+int main() {
+
+    int n, tq;
+    int at[20], bt[20], rt[20], ct[20], tat[20], wt[20];
+
+    int time = 0, done = 0;
+    float avg_tat = 0, avg_wt = 0;
+
+    printf("Enter number of processes: \n");
+    scanf("%d", &n);
+
+    printf("Enter Time Quantum: \n");
+    scanf("%d", &tq);
+
+    for(i = 0; i < n; i++) {
+        printf("Enter AT and BT for P%d: \n", i+1);
+        scanf("%d %d", &at[i], &bt[i]);
+
+        rt[i] = bt[i];
+    }
+
+    int completed = 0;
+
+    while(completed < n) {
+
+        done = 1;
+
+        for(i = 0; i < n; i++) {
+
+            if(rt[i] > 0 && at[i] <= time) {
+
+                done = 0;
+
+                if(rt[i] > tq) {
+
+                    time += tq;
+                    rt[i] -= tq;
+                }
+                else {
+
+                    time += rt[i];
+                    rt[i] = 0;
+
+                    ct[i] = time;
+
+                    completed++;
+                }
+            }
+        }
+
+        if(done == 1)
+            time++;
+    }
+
+    for(i = 0; i < n; i++) {
+
+        tat[i] = ct[i] - at[i];
+        wt[i] = tat[i] - bt[i];
+
+        avg_tat += tat[i];
+        avg_wt += wt[i];
+    }
+
+    avg_tat /= n;
+    avg_wt /= n;
+
+    printf("\nAverage Turnaround Time: %.2f\n", avg_tat);
+    printf("Average Waiting Time: %.2f\n", avg_wt);
+
+    return 0;
+}
